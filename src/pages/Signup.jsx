@@ -4,10 +4,14 @@ import { FaApple } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import Loader from '../common/Loader';
 import { toast, ToastContainer } from 'react-toastify';
+import Input from '../common/Input';
+import Container from '../common/Container';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
     const apiUrl = process.env.REACT_APP_API_BASE_URL;
 
+    const navigate = useNavigate()
     const [formSign, setFormSign] = useState({
         name: "",
         email: "",
@@ -62,7 +66,10 @@ function Signup() {
                 const response = await axios.post(`${apiUrl}/signup`, formSign);
                 console.log(response, "response");
                 if (response.status === 200) {
+
                     setLoader(false)
+                    localStorage.setItem("access_token", response.data.access_token);
+                    localStorage.setItem("refresh_token", response.data.refresh_token);
                     toast.success("User Signup Successfully")
                     setFormSign({
                         name: "",
@@ -72,6 +79,10 @@ function Signup() {
                         confirm_password: "",
                         checked: false
                     })
+                    setTimeout(() => {
+                    navigate("/intake")    
+                    }, 3000);
+                    
                 }
             } catch (error) {
                 console.error(error);
@@ -80,7 +91,7 @@ function Signup() {
     };
 
     return (
-        <div className="container ">
+        <Container>
 
             {loader ? <Loader /> :
                 <div className='p-6 grid grid-cols-1 md:grid-cols-2 gap-6'>
@@ -89,61 +100,64 @@ function Signup() {
                         <p className='pb-4 text-center text-gray-500'>Please enter your details below to proceed.</p>
 
                         <div className="space-y-2">
-                            <input
+                            <Input
+                                type="text"
+                                name="name"
                                 value={formSign.name}
                                 onChange={(e) => setFormSign({ ...formSign, name: e.target.value })}
-                                className="px-3 w-full py-4 placeholder-black border rounded-md"
-                                type="text"
                                 placeholder="Name"
+                                error={error.name}
                             />
-                            {!formSign.name && <p className="text-red-500 text-sm">{error.name}</p>}
 
-                            <input
+                            <Input
+                                type="email"
+                                name="email"
                                 value={formSign.email}
                                 onChange={(e) => setFormSign({ ...formSign, email: e.target.value })}
-                                className="px-3 w-full py-4 placeholder-black border rounded-md"
-                                type="email"
                                 placeholder="Email"
+                                error={error.email}
                             />
-                            {!formSign.email && <p className="text-red-500 text-sm">{error.email}</p>}
 
-                            <input
+                            <Input
+                                type="number"
                                 value={formSign.contact_Number}
                                 onChange={(e) => setFormSign({ ...formSign, contact_Number: e.target.value })}
-                                className="px-3 w-full py-4 placeholder-black border rounded-md"
-                                type="tel"
-                                placeholder="Mobile Number"
+                                placeholder="Mobile_number"
+                                error={error.contact_Number}
                             />
-                            {error.contact_Number && <p className="text-red-500 text-sm">{error.contact_Number}</p>}
 
-                            <input
+                            <Input
+                                type="password"
+                                name="passsword"
                                 value={formSign.password}
                                 onChange={(e) => setFormSign({ ...formSign, password: e.target.value })}
-                                className="px-3 w-full py-4 placeholder-black border rounded-md"
-                                type="password"
-                                placeholder="Password"
+                                placeholder="password"
+                                error={error.password}
                             />
-                            {error.password && <p className="text-red-500 text-sm">{error.password}</p>}
 
-                            <input
+                            <Input
+                                type="password"
+                                name="name"
                                 value={formSign.confirm_password}
                                 onChange={(e) => setFormSign({ ...formSign, confirm_password: e.target.value })}
-                                className="px-3 w-full py-4 placeholder-black border rounded-md"
-                                type="password"
-                                placeholder="Confirm Password"
+                                placeholder="Confirm_password"
+                                error={error.confirm_password}
                             />
-                            {error.confirm_password && <p className="text-red-500 text-sm">{error.confirm_password}</p>}
+
+
 
                             <div className="flex items-center space-x-2">
-                                <input
-                                    checked={formSign.checked}
-                                    onChange={(e) => setFormSign({ ...formSign, checked: e.target.checked })}
+                                <Input
                                     type="checkbox"
-                                    id="terms"
+                                    name="check"
+                                    value={formSign.checked}
+                                    onChange={(e) => setFormSign({ ...formSign, checked: e.target.value })}
+                                    error={error.checked}
                                 />
+
                                 <label htmlFor="terms" className="text-sm">I agree to the terms and conditions</label>
                             </div>
-                            {error.checked && <p className="text-red-500 text-sm">{error.checked}</p>}
+
 
                             <button
                                 onClick={handleSubmit}
@@ -172,7 +186,7 @@ function Signup() {
                     </div>
                 </div>}
             <ToastContainer />
-        </div>
+        </Container>
     );
 }
 

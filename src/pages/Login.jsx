@@ -5,6 +5,8 @@ import { FcGoogle } from 'react-icons/fc'
 import { Link } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import Loader from '../common/Loader'
+import Input from '../common/Input'
+import Container from '../common/Container'
 
 function Login() {
     const apiUrl = process.env.REACT_APP_API_BASE_URL;
@@ -62,36 +64,37 @@ function Login() {
     };
 
     return (
-        <div className="container ">
+        <Container className="container ">
             {loader ? <Loader /> : <div className='h-screen justify-center items-center p-6 grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div className="bg-white  rounded-lg">
                     <h2 className="text-2xl font-semibold text-center">Welcome</h2>
                     <p className='pb-4 text-center text-gray-500'>Please enter your details below to proceed.</p>
 
                     <div className="space-y-2">
-                        <input
+                        <Input
+                            type="email"
+                            name="email"
                             value={userLog.email}
                             onChange={(e) => setUserLog({ ...userLog, email: e.target.value })}
-                            className="px-3 w-full py-4 placeholder-black border rounded-md"
-                            type="email"
                             placeholder="Email"
+                            error={errors.email}
                         />
-                        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-                        <input
+                        <Input
+                            type="password"
+
                             value={userLog.password}
                             onChange={(e) => setUserLog({ ...userLog, password: e.target.value })}
-                            className="px-3 w-full py-4 placeholder-black border rounded-md"
-                            type="password"
-                            placeholder="Password"
+                            placeholder="Enter password"
+                            error={errors.password}
                         />
-                        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
                         <div className=' flex justify-between'>
-                            <div className='flex gap-1'> <input
-                                checked={userLog.checked}
-                                onChange={(e) => setUserLog({ ...userLog, checked: e.target.checked })}
-                                type="checkbox"
-                                id="terms"
-                            />
+                            <div className='flex gap-1'>
+                                <Input
+                                    checked={userLog.checked}
+                                    onChange={(e) => setUserLog({ ...userLog, checked: e.target.checked })}
+                                    type="checkbox"
+                                    id="terms"
+                                />
                                 <label >Remember me</label></div>
                             <p>Forget password</p>
                         </div>
@@ -127,7 +130,7 @@ function Login() {
                 </div>
             </div>}
             <ToastContainer />
-        </div>
+        </Container>
     )
 }
 
