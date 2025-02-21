@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from '../common/Container';
 import Input from '../common/Input';
 import { LuImagePlus } from 'react-icons/lu';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProfile } from '../feature/ProfileSlice';
+
+
 
 function CompanyForm() {
     const [formData, setFormData] = useState({
@@ -20,6 +24,15 @@ function CompanyForm() {
     });
 
     const [error, setError] = useState({});
+
+    const dispatch = useDispatch()
+    const profile = useSelector((state) => state?.profile?.profileData)
+    useEffect(() => {
+        dispatch(getProfile())
+    }, [dispatch])
+
+
+
 
     const validation = () => {
         const newError = {};
@@ -67,6 +80,8 @@ function CompanyForm() {
         }
     };
 
+
+
     return (
         <Container>
             <div className='p-2 max-w-xl mx-auto bg-white rounded-xl space-y-4'>
@@ -81,6 +96,7 @@ function CompanyForm() {
                     <p className='text-xs text-gray-500'>.png, .jpg, .jpeg (max 800 x 400px)</p>
                 </div>
 
+                {/* all input Fields*/}
                 <div className='py-2'>
                     <label>Legal company</label><span className='text-red-500'>*</span>
                     <Input
@@ -112,10 +128,7 @@ function CompanyForm() {
                     <label>Email</label><span className='text-red-500'>*</span>
                     <Input
                         name='email' type='email'
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-
-                        error={error.email}
+                        value={profile?.email}
                     />
 
                     <label>Mobile number</label>
@@ -176,8 +189,9 @@ function CompanyForm() {
                         required
                         error={error.zipCode}
                     />
-
-                    <button onClick={handleSubmit} className='w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600'>Save</button>
+                </div>
+                <div className='flex justify-center w-full'>
+                    <button onClick={handleSubmit} className=' text-center bg-blue-400 text-white py-3 px-[5rem] md:px-[10rem] rounded-3xl hover:bg-blue-600'>Save</button>
                 </div>
             </div>
         </Container>

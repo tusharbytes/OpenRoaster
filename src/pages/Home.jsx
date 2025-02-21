@@ -1,7 +1,6 @@
 import Container from '../common/Container'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Button from "../common/Button"
 
 function Home() {
     return (
@@ -32,7 +31,7 @@ function Home() {
                     </div>
                     <div className="mt-4 lg:mt-8 ">
                         <h1 className="uppercase  font-bold sm:leading-[80px] leading-[70px] md:leading-[150px] xl:leading-[170.98px] text-white  text-[50px]   
-                      sm:text-[80px] lg:tracking-wide md:text-[150px] xl:text-[171px] py-2">
+                      sm:text-[80px] lg:tracking-wide md:text-[150px] xl:text-[170px] py-2">
                             POST YOUR JOB
                         </h1>
                         <div className="max-w-[750px] mt-6 lg:mt-0">

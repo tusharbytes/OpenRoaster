@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Intake from './pages/Intake';
+import ProtectedRoute from './common/ProtectedRoute';
 
 function App() {
   return (
@@ -17,8 +18,9 @@ function App() {
 
 
 
-        <Route path='/dashboard' element={<Dashboard />}></Route>
-        <Route path='/intake' element={<Intake />}></Route>
+        {/* Protected Routes */}
+      <Route path='/dashboard' element={<ProtectedRoute element={<Dashboard />} />} />
+      <Route path='/intake' element={<ProtectedRoute element={<Intake />} />} />
 
 
 
