@@ -4,9 +4,11 @@ import Input from '../common/Input';
 import { LuImagePlus } from 'react-icons/lu';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfile } from '../feature/ProfileSlice';
+import { profileImage, profileUpdate } from '../api/Api';
+import { formToJSON } from 'axios';
 
 
-
+const token = localStorage.getItem("access_token")
 function CompanyForm() {
     const [formData, setFormData] = useState({
         legal_company: '',
@@ -23,6 +25,24 @@ function CompanyForm() {
         zipCode: '',
     });
 
+    const [image, setImage] = useState(null)
+    const [preview, setPreview] = useState(null);
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setImage(file);
+        setPreview(URL.createObjectURL(file));
+
+        try {
+            await profileImage(file);
+        } catch (error) {
+            console.error("Image upload failed:", error);
+        }
+    };
+
+
     const [error, setError] = useState({});
 
     const dispatch = useDispatch()
@@ -31,7 +51,20 @@ function CompanyForm() {
         dispatch(getProfile())
     }, [dispatch])
 
-
+    const payload = {
+        name: formData.business_name,
+        established_year: formData.established_year,
+        email: profile?.email,
+        phone: formData.mobile_number,
+        licensed_number: formData.licensed_number,
+        state_licensed: formData.states_licensed,
+        address_1: formData.address1,
+        address_2: formData.address2,
+        state: formData.state,
+        city: formData.city,
+        zip_code: formData.zipCode
+    }
+    // console.log(payload, "payload")
 
 
     const validation = () => {
@@ -49,13 +82,8 @@ function CompanyForm() {
             newError.established_year = 'Enter a valid year';
         }
 
-        if (!formData.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
-            newError.email = 'Enter a valid email';
-
-        }
-
         if (!formData.address1) {
-            newError.address1 = 'Address 1 is required';
+            newError.address1 = 'Address  is required';
         }
 
         if (!formData.city) {
@@ -74,7 +102,8 @@ function CompanyForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validation()) {
-            console.log(formData, "Form submitted successfully");
+            profileUpdate(payload)
+
         } else {
             console.log("Form validation failed", error);
         }
@@ -87,8 +116,18 @@ function CompanyForm() {
             <div className='p-2 max-w-xl mx-auto bg-white rounded-xl space-y-4'>
                 <h2 className='text-2xl font-bold text-center'>Company Profile</h2>
                 <div className='flex flex-col text-center items-center'>
-                    <input type="file" name="company_logo" className='hidden' id='company_logo' />
-                    <p htmlFor='company_logo' className='text-center text-2xl bg-gray-100 cursor-pointer rounded-[50%] py-6 px-6 border'><LuImagePlus /></p>
+                    <input
+                        onChange={handleFileChange}
+                        type="file" name="company_logo" className='hidden' id='company_logo' />
+
+                    <p htmlFor="company_logo" className="text-center text-2xl bg-gray-100 cursor-pointer rounded-[50%] w-[6rem] h-[6rem] flex items-center justify-center border overflow-hidden">
+                        {preview ? (
+                            <img src={preview} className="w-full h-full object-cover" />
+                        ) : (
+                            <LuImagePlus />
+                        )}
+                    </p>
+
                     <label htmlFor='company_logo' className='cursor-pointer text-center text-blue-500'>
 
                         Click to upload your company logo
@@ -162,7 +201,14 @@ function CompanyForm() {
                         required
                         error={error.address1}
                     />
-
+                    <label>Address 2</label>
+                    <Input
+                        name='address1'
+                        value={formData.address2}
+                        onChange={(e) => setFormData({ ...formData, address2: e.target.value })}
+                        required
+                        error={error.address1}
+                    />
                     <label>City</label>
                     <Input
                         name='city'
@@ -191,7 +237,7 @@ function CompanyForm() {
                     />
                 </div>
                 <div className='flex justify-center w-full'>
-                    <button onClick={handleSubmit} className=' text-center bg-blue-400 text-white py-3 px-[5rem] md:px-[10rem] rounded-3xl hover:bg-blue-600'>Save</button>
+                    <button onClick={(e) => handleSubmit(e)} className=' text-center bg-blue-400 text-white py-3 px-[5rem] md:px-[10rem] rounded-3xl hover:bg-blue-600'>Save</button>
                 </div>
             </div>
         </Container>

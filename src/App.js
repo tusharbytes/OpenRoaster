@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Intake from './pages/Intake';
 import ProtectedRoute from './common/ProtectedRoute';
+import SubscriptionPlans from './pages/Subscription';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
         {/* Protected Routes */}
       <Route path='/dashboard' element={<ProtectedRoute element={<Dashboard />} />} />
       <Route path='/intake' element={<ProtectedRoute element={<Intake />} />} />
+      <Route path='/sub' element={<ProtectedRoute element={<SubscriptionPlans />} />} />
+
 
 
 
