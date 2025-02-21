@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const token = localStorage.getItem("access_token");
+console.log(token)
 
 export const getProfile = createAsyncThunk("getProfile", async (_, { rejectWithValue }) => {
     try {

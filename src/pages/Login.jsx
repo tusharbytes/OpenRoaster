@@ -2,15 +2,16 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { FaApple } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import Loader from '../common/Loader'
 import Input from '../common/Input'
 import Container from '../common/Container'
+const token = localStorage.getItem("access_token")
 
 function Login() {
     const apiUrl = process.env.REACT_APP_API_BASE_URL;
-
+    const navigate = useNavigate()
     const [userLog, setUserLog] = useState({
         email: "",
         password: "",
@@ -47,18 +48,22 @@ function Login() {
             try {
 
                 const response = await axios.post(`${apiUrl}/login`, userLog);
-                console.log(response, "userlog");
                 localStorage.setItem("access_token", response.data.access_token);
                 localStorage.setItem("refresh_token", response.data.refresh_token);
 
                 if (response.status === 200) {
                     setLoader(false)
                     toast.success("User Sign In Successfully")
-                    setUserLog({
-                        email: "",
-                        password: "",
-                        checked: false
-                    })
+                    // if (token) {
+                        setTimeout(() => {
+                            navigate("/intake")
+                        }, 3000);
+                        setUserLog({
+                            email: "",
+                            password: "",
+                            checked: false
+                        })
+                    // }
                 }
             } catch (error) {
                 console.error("Login failed", error);
@@ -95,7 +100,7 @@ function Login() {
                             />
                             <div className=' flex justify-between'>
                                 <div className='flex gap-1 items-center'>
-                                    
+
                                     <input
                                         checked={userLog.checked}
                                         onChange={(e) => setUserLog({ ...userLog, checked: e.target.checked })}
@@ -104,8 +109,8 @@ function Login() {
                                     // error={errors.checked}
                                     />
                                     <div>
-                                    <label >Remember me</label>
-                                    {errors.checked && <p className="text-red-500 text-sm">{errors.checked}</p>}
+                                        <label >Remember me</label>
+                                        {errors.checked && <p className="text-red-500 text-sm">{errors.checked}</p>}
                                     </div>
                                 </div>
                                 <p>Forget password</p>

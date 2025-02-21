@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProfile } from '../feature/ProfileSlice';
 import { profileImage, profileUpdate } from '../api/Api';
 import { formToJSON } from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 const token = localStorage.getItem("access_token")
@@ -24,6 +25,12 @@ function CompanyForm() {
         state: '',
         zipCode: '',
     });
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getProfile())
+    }, [dispatch])
+
 
     const [image, setImage] = useState(null)
     const [preview, setPreview] = useState(null);
@@ -37,6 +44,9 @@ function CompanyForm() {
 
         try {
             await profileImage(file);
+            dispatch(getProfile())
+            toast.success("Profile upload successfully")
+          
         } catch (error) {
             console.error("Image upload failed:", error);
         }
@@ -45,12 +55,8 @@ function CompanyForm() {
 
     const [error, setError] = useState({});
 
-    const dispatch = useDispatch()
     const profile = useSelector((state) => state?.profile?.profileData)
-    useEffect(() => {
-        dispatch(getProfile())
-    }, [dispatch])
-
+   
     const payload = {
         name: formData.business_name,
         established_year: formData.established_year,
@@ -103,7 +109,21 @@ function CompanyForm() {
         e.preventDefault();
         if (validation()) {
             profileUpdate(payload)
-
+            toast.success("Form submit successfully")
+            setFormData({
+                legal_company: '',
+                business_name: '',
+                established_year: '',
+                email: '',
+                mobile_number: '',
+                licensed_number: '',
+                states_licensed: '',
+                address1: '',
+                address2: '',
+                city: '',
+                state: '',
+                zipCode: '',
+            })
         } else {
             console.log("Form validation failed", error);
         }
@@ -121,11 +141,11 @@ function CompanyForm() {
                         type="file" name="company_logo" className='hidden' id='company_logo' />
 
                     <p htmlFor="company_logo" className="text-center text-2xl bg-gray-100 cursor-pointer rounded-[50%] w-[6rem] h-[6rem] flex items-center justify-center border overflow-hidden">
-                        {preview ? (
-                            <img src={preview} className="w-full h-full object-cover" />
-                        ) : (
+                        {profile?.business?.image ?
+                            <img src={profile.business.image} className="w-full h-full object-cover" />
+                            :
                             <LuImagePlus />
-                        )}
+                        }
                     </p>
 
                     <label htmlFor='company_logo' className='cursor-pointer text-center text-blue-500'>
@@ -240,6 +260,7 @@ function CompanyForm() {
                     <button onClick={(e) => handleSubmit(e)} className=' text-center bg-blue-400 text-white py-3 px-[5rem] md:px-[10rem] rounded-3xl hover:bg-blue-600'>Save</button>
                 </div>
             </div>
+            <ToastContainer />
         </Container>
     );
 }

@@ -91,7 +91,7 @@ const SubscriptionPlans = () => {
                                 ))}
                             </ul>
                             <div className="mt-auto">
-                                <button className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                                <button className="mt-6 w-full bg-blue-400 text-white py-2 rounded-3xl hover:bg-blue-700">
                                     {plan.buttonText}
                                 </button>
                             </div>
