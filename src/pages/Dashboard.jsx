@@ -29,7 +29,11 @@ const Dashboard = () => {
                         <li className="cursor-pointer hover:text-blue-500 text-lg md:text-xl flex items-center"><IoSettingsOutline /></li>
                         <li className="cursor-pointer hover:text-blue-500 text-lg md:text-xl flex items-center"><GoBell /></li>
                         <li className="cursor-pointer hover:text-blue-500 text-2xl md:text-4xl flex items-center"><FcBusinessman /></li>
-                        <select className="text-lg"></select>
+                        <select className="text-lg">
+                            <option value="">Select</option>
+                            <option  value="">LogOut</option>
+
+                        </select>
                     </ul>
                 </div>
             </div>

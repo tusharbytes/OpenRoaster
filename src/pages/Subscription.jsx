@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import Container from "../common/Container";
+import { useDispatch } from "react-redux";
+import { profileUpdate } from "../api/Api";
+import { getProfile } from "../feature/ProfileSlice";
 
 const plans = [
     {
@@ -67,40 +71,51 @@ const plans = [
 ];
 
 const SubscriptionPlans = () => {
-    return (
-        <div className="bg-blue-50 py-10">
-            <div className="max-w-7xl mx-auto text-center">
-                <h2 className="text-2xl font-bold">Choose your right plan!</h2>
-                <p className="text-gray-600">Select from best plans, ensuring a perfect match. Need more or less? Customize your subscription for a seamless fit!</p>
-                <div className="grid grid-cols-1   md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-                    {plans.map((plan, index) => (
-                        <div key={index} className="border bg-white flex flex-col h-full rounded-lg p-6 shadow-lg">
-                            <h3 className="text-lg font-semibold text-gray-900">{plan.title}</h3>
-                            <p className="text-sm text-gray-500">{plan.subtitle}</p>
-                            <p className="text-2xl font-bold flex justify-center mt-4">
-                                {plan.price} <span className="text-blue-400">{plan.day}</span>
-                            </p>
-                            <ul className="mt-4 text-sm text-gray-700">
-                                {plan.features.map((feature, i) => (
-                                    <li key={i} className="flex items-start gap-2">
-                                        <span className="text-green-500">
-                                            <IoMdCheckmarkCircleOutline />
-                                        </span>{" "}
-                                        {feature}
-                                    </li>
-                                ))}
-                            </ul>
-                            <div className="mt-auto">
-                                <button className="mt-6 w-full bg-blue-400 text-white py-2 rounded-3xl hover:bg-blue-700">
-                                    {plan.buttonText}
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
 
+const dispatch = useDispatch()
+
+const handleAddPlan =async(i)=>{
+  await   profileUpdate({ plan: i})
+  dispatch(getProfile())
+
+}
+
+    return (
+        <Container>
+            <div className="bg-blue-50  ">
+                <div className="max-w-7xl mx-auto ">
+                    <h2 className="text-2xl font-bold text-center">Choose your right plan!</h2>
+                    <p className="text-gray-600 text-center">Select from best plans, ensuring a perfect match. Need more or less? Customize your subscription for a seamless fit!</p>
+                    <div className="grid grid-cols-1   md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+                        {plans.map((plan, index) => (
+                            <div key={index} className="border bg-white flex flex-col h-full rounded-lg p-6 shadow-lg">
+                                <h3 className="text-lg font-semibold text-gray-900">{plan.title}</h3>
+                                <p className="text-sm text-gray-500">{plan.subtitle}</p>
+                                <p className="text-2xl font-bold flex justify-center mt-4">
+                                    {plan.price} <span className="text-blue-400">{plan.day}</span>
+                                </p>
+                                <ul className=" text-sm text-gray-700">
+                                    {plan.features.map((feature, i) => (
+                                        <li key={i} className="flex   gap-2">
+                                            <span className="text-green-500">
+                                                <IoMdCheckmarkCircleOutline />
+                                            </span>
+                                            {feature}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <div className="mt-auto">
+                                    <button onClick={()=>handleAddPlan(plan.title)} className="mt-6 w-full bg-blue-400 text-white py-2 rounded-3xl hover:bg-blue-700">
+                                      Continue
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                </div>
             </div>
-        </div>
+        </Container>
     );
 };
 

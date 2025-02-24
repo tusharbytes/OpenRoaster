@@ -1,14 +1,12 @@
 import axios from 'axios';
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaApple } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import Loader from '../common/Loader';
 import { toast, ToastContainer } from 'react-toastify';
 import Input from '../common/Input';
 import Container from '../common/Container';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getProfile } from '../feature/ProfileSlice';
+import { Link, useNavigate } from 'react-router-dom';
 const apiUrl = process.env.REACT_APP_API_BASE_URL;
 function Signup() {
 
@@ -58,8 +56,8 @@ function Signup() {
     };
 
     const [loader, setLoader] = useState(false)
-    const dispatch = useDispatch()
 
+   
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -68,10 +66,17 @@ function Signup() {
             setLoader(true)
             try {
                 const response = await axios.post(`${apiUrl}/signup`, formSign);
-                console.log(response, "response");
-                if (response.status === 200) {
+                // console.log(response.data.errors.email, "response");
+                setLoader(false)
+                if (response.data.errors?.email) {
+                    toast.error("The email has already been taken");
+                }
+                if (response.data.errors?.password) {
+                    toast.error("The password field must be at least 8 characters"); 
+                
 
-                    setLoader(false)
+                }
+                if (response.data.access_token) {
                     localStorage.setItem("access_token", response.data.access_token);
                     localStorage.setItem("refresh_token", response.data.refresh_token);
                     toast.success("User Signup Successfully")
@@ -83,20 +88,15 @@ function Signup() {
                         confirm_password: "",
                         checked: false
                     })
-                    setTimeout(() => {
+                    setLoader(true)
                         navigate("/intake")
-                    }, 3000);
-
+                 
                 }
             } catch (error) {
-                console.error(error);
+              
             }
         }
     };
-    useEffect(() => {
-        dispatch(getProfile())
-
-    }, [])
 
     return (
         <Container >
@@ -187,6 +187,9 @@ function Signup() {
                                         <FaApple /> Apple
                                     </span>
                                 </div>
+                                <div className='text-center pt-4'>
+                                <p>Already have Account? <Link className='text-blue-500' to={"/signin"}>Sign in</Link></p>
+                            </div>
                             </div>
                         </div>
                         <div className='hidden sm:hidden md:block'>

@@ -5,9 +5,7 @@ const token = localStorage.getItem("access_token");
 const url = "https://roaster.shopifystudio.xyz/api/";
 
 export const profileUpdate = async (payload) => {
-    console.log("Payload:", payload);
-
-
+    
     try {
         const response = await axios.patch(`${url}business/profile-update`,
             payload,

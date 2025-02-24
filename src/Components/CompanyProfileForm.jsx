@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from '../common/Container';
 import Input from '../common/Input';
 import { LuImagePlus } from 'react-icons/lu';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProfile } from '../feature/ProfileSlice';
 import { profileImage, profileUpdate } from '../api/Api';
-import { formToJSON } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { getProfile } from '../feature/ProfileSlice';
 
 
-const token = localStorage.getItem("access_token")
 function CompanyForm() {
     const [formData, setFormData] = useState({
         legal_company: '',
@@ -25,15 +24,15 @@ function CompanyForm() {
         state: '',
         zipCode: '',
     });
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(getProfile())
-    }, [dispatch])
 
 
     const [image, setImage] = useState(null)
     const [preview, setPreview] = useState(null);
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    
+    
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -41,26 +40,20 @@ function CompanyForm() {
 
         setImage(file);
         setPreview(URL.createObjectURL(file));
-
-        try {
             await profileImage(file);
-            dispatch(getProfile())
-            toast.success("Profile upload successfully")
-          
-        } catch (error) {
-            console.error("Image upload failed:", error);
-        }
+        
     };
 
 
     const [error, setError] = useState({});
 
-    const profile = useSelector((state) => state?.profile?.profileData)
+    const profile = useSelector((state) => state)
+    console.log(profile?.profile.profileData.business.image,":profile")
    
     const payload = {
         name: formData.business_name,
         established_year: formData.established_year,
-        email: profile?.email,
+        email: profile?.profile.profileData.email   ,
         phone: formData.mobile_number,
         licensed_number: formData.licensed_number,
         state_licensed: formData.states_licensed,
@@ -105,30 +98,41 @@ function CompanyForm() {
         return Object.keys(newError).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validation()) {
-            profileUpdate(payload)
-            toast.success("Form submit successfully")
-            setFormData({
-                legal_company: '',
-                business_name: '',
-                established_year: '',
-                email: '',
-                mobile_number: '',
-                licensed_number: '',
-                states_licensed: '',
-                address1: '',
-                address2: '',
-                city: '',
-                state: '',
-                zipCode: '',
-            })
+            try {
+                await profileUpdate(payload);  
+                toast.success("Profile updated successfully!");
+    
+                // Fetch updated profile from the backend
+                dispatch(getProfile());
+    
+                // Reset the form state
+                setFormData({
+                    legal_company: '',
+                    business_name: '',
+                    established_year: '',
+                    email: '',
+                    mobile_number: '',
+                    licensed_number: '',
+                    states_licensed: '',
+                    address1: '',
+                    address2: '',
+                    city: '',
+                    state: '',
+                    zipCode: '',
+                });
+            } catch (error) {
+                toast.error("Failed to update profile.");
+                console.error("Error updating profile:", error);
+            }
         } else {
             console.log("Form validation failed", error);
         }
     };
-
+    
+   
 
 
     return (
@@ -141,11 +145,15 @@ function CompanyForm() {
                         type="file" name="company_logo" className='hidden' id='company_logo' />
 
                     <p htmlFor="company_logo" className="text-center text-2xl bg-gray-100 cursor-pointer rounded-[50%] w-[6rem] h-[6rem] flex items-center justify-center border overflow-hidden">
-                        {profile?.business?.image ?
-                            <img src={profile.business.image} className="w-full h-full object-cover" />
-                            :
-                            <LuImagePlus />
-                        }
+                       {preview || profile?.profile?.profileData?.business?.image ? (
+                     <img 
+                     src={preview || profile?.profile?.profileData?.business?.image} 
+                         className="w-full h-full object-cover" 
+                              />
+                    ) : (
+              <LuImagePlus />
+            )}
+
                     </p>
 
                     <label htmlFor='company_logo' className='cursor-pointer text-center text-blue-500'>
@@ -178,6 +186,7 @@ function CompanyForm() {
                     <label>Established year</label><span className='text-red-500'>*</span>
                     <Input
                         name='established_year'
+                        type='number'
                         value={formData.established_year}
                         onChange={(e) => setFormData({ ...formData, established_year: e.target.value })}
                         required
@@ -187,12 +196,14 @@ function CompanyForm() {
                     <label>Email</label><span className='text-red-500'>*</span>
                     <Input
                         name='email' type='email'
-                        value={profile?.email}
+                        value={profile?.profile.profileData.email}
                     />
 
                     <label>Mobile number</label>
                     <Input
                         name='mobile_number'
+                        type='number'
+
                         value={formData.mobile_number}
                         onChange={(e) => setFormData({ ...formData, mobile_number: e.target.value })}
                         required
@@ -250,6 +261,7 @@ function CompanyForm() {
                     <label>Zip/Postal code</label>
                     <Input
                         name='zipCode'
+                        type='number'
                         value={formData.zipCode}
                         onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
                         required

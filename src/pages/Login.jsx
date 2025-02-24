@@ -7,17 +7,17 @@ import { toast, ToastContainer } from 'react-toastify'
 import Loader from '../common/Loader'
 import Input from '../common/Input'
 import Container from '../common/Container'
-const token = localStorage.getItem("access_token")
 
 function Login() {
     const apiUrl = process.env.REACT_APP_API_BASE_URL;
     const navigate = useNavigate()
     const [userLog, setUserLog] = useState({
         email: "",
-        password: "",
-        checked: false
+        password: "12345678",
+        checked: true
     })
     const [errors, setErrors] = useState({});
+
 
     const validateForm = () => {
         let formErrors = {};
@@ -46,35 +46,36 @@ function Login() {
         if (validateForm()) {
             setLoader(true)
             try {
-
                 const response = await axios.post(`${apiUrl}/login`, userLog);
-                localStorage.setItem("access_token", response.data.access_token);
-                localStorage.setItem("refresh_token", response.data.refresh_token);
+                if (response.data.access_token) {
+                    localStorage.setItem("access_token", response.data.access_token);
+                    localStorage.setItem("refresh_token", response.data.refresh_token);
+                    toast.success(response.data.message);
 
-                if (response.status === 200) {
+                    setUserLog({
+                        email: "",
+                        password: "",
+                        checked: false
+                    });
+                    
+                    navigate("/intake");
                     setLoader(false)
-                    toast.success("User Sign In Successfully")
-                    // if (token) {
-                        setTimeout(() => {
-                            navigate("/intake")
-                        }, 3000);
-                        setUserLog({
-                            email: "",
-                            password: "",
-                            checked: false
-                        })
-                    // }
+
+                }else{
+                    toast.error(response.data.message)
                 }
-            } catch (error) {
-                console.error("Login failed", error);
+            } 
+            catch (error) {
+                toast.error(error)
+            }
+            finally {
                 setLoader(false)
-                toast.error("user not Exit")
             }
         }
     };
 
     return (
-        <Container className="container ">
+        <Container  >
             <div className='flex justify-center '>
                 {loader ? <Loader /> : <div className='  justify-center items-center p-6 grid grid-cols-1 md:grid-cols-2 gap-6'>
                     <div className="bg-white  rounded-lg">
@@ -89,6 +90,8 @@ function Login() {
                                 onChange={(e) => setUserLog({ ...userLog, email: e.target.value })}
                                 placeholder="Email"
                                 error={errors.email}
+                                autoComplete={true}
+                                
                             />
                             <Input
                                 type="password"
@@ -138,7 +141,7 @@ function Login() {
                             </div>
 
                             <div className='text-center pt-4'>
-                                <p>no have Account? <Link className='text-blue-500' to={"/signup"}>Signup</Link></p>
+                                <p>No have Account? <Link className='text-blue-500' to={"/signup"}>Signup</Link></p>
                             </div>
                         </div>
                     </div>

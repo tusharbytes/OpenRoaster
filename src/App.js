@@ -7,20 +7,20 @@ import Dashboard from './pages/Dashboard';
 import Intake from './pages/Intake';
 import ProtectedRoute from './common/ProtectedRoute';
 import SubscriptionPlans from './pages/Subscription';
+import PostAJob from './Components/postAJob/PostAJob';
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Home />}></Route>
+        <Route path='/' element={<PostAJob />}></Route>
         <Route path='/signup' element={<Signup />}></Route>
-        <Route path='/login' element={<Login />}></Route>
+        <Route path='/signin' element={<Login />}></Route>
 
 
 
 
         {/* Protected Routes */}
-      <Route path='/dashboard' element={<ProtectedRoute element={<Dashboard />} />} />
       <Route path='/intake' element={<ProtectedRoute element={<Intake />} />} />
 
 

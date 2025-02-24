@@ -6,11 +6,13 @@ const Input = ({
     onChange,
     placeholder,
     className = '',
-    error
+    error,
+    autoComplete = false
 }) => {
     return (
         <div className='mb-3  '>
             <input
+            autoComplete={autoComplete}
                 type={type}
                 value={value}
                 onChange={onChange}
