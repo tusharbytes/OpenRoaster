@@ -7,13 +7,13 @@ import { toast, ToastContainer } from 'react-toastify'
 import Loader from '../common/Loader'
 import Input from '../common/Input'
 import Container from '../common/Container'
+import instance from '../service/Instance'
 
 function Login() {
-    const apiUrl = process.env.REACT_APP_API_BASE_URL;
     const navigate = useNavigate()
     const [userLog, setUserLog] = useState({
         email: "",
-        password: "12345678",
+        password: "",
         checked: true
     })
     const [errors, setErrors] = useState({});
@@ -46,24 +46,33 @@ function Login() {
         if (validateForm()) {
             setLoader(true)
             try {
-                const response = await axios.post(`${apiUrl}/login`, userLog);
+                const response = await instance.post(`login`, userLog);
+                console.log(response,"log")
                 if (response.data.access_token) {
                     localStorage.setItem("access_token", response.data.access_token);
                     localStorage.setItem("refresh_token", response.data.refresh_token);
                     toast.success(response.data.message);
-
+                
                     setUserLog({
                         email: "",
                         password: "",
                         checked: false
                     });
+                
+                    setLoader(false);
+                
                     
-                    navigate("/intake");
-                    setLoader(false)
-
-                }else{
-                    toast.error(response.data.message)
+                    if (response?.data?.user?.plan) {
+                        navigate("/dashboard");
+                    } else if (response?.data?.user?.stepper === "Subscription") {
+                        navigate("/subscription");
+                    } else {
+                        navigate("/intake");
+                    }
+                } else {
+                    toast.error(response.data.message);
                 }
+                
             } 
             catch (error) {
                 toast.error(error)

@@ -1,15 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios from "../service/Instance";
 
 
 export const getProfile = createAsyncThunk("getProfile", async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem("access_token");
     try {
-        const response = await axios.get("https://roaster.shopifystudio.xyz/api/me", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await axios.get("me", 
+         );
         return response.data.data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Something went wrong"); // Fix: Proper error handling
@@ -25,6 +21,7 @@ export const profileSlice = createSlice({
     },
     reducers: {
         resetProfile: (state) => {
+            
             state.profileData = null;  
             state.error = null;  
             state.loading= false;
@@ -32,6 +29,7 @@ export const profileSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+
             .addCase(getProfile.pending, (state) => {
                 state.loading = true;
                 state.error = null;

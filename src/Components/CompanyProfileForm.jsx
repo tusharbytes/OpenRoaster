@@ -48,12 +48,11 @@ function CompanyForm() {
     const [error, setError] = useState({});
 
     const profile = useSelector((state) => state)
-    console.log(profile?.profile.profileData.business.image,":profile")
    
     const payload = {
         name: formData.business_name,
         established_year: formData.established_year,
-        email: profile?.profile.profileData.email   ,
+        email: profile?.profile?.profileData?.email   ,
         phone: formData.mobile_number,
         licensed_number: formData.licensed_number,
         state_licensed: formData.states_licensed,
@@ -123,6 +122,7 @@ function CompanyForm() {
                     state: '',
                     zipCode: '',
                 });
+                
             } catch (error) {
                 toast.error("Failed to update profile.");
                 console.error("Error updating profile:", error);
@@ -196,7 +196,7 @@ function CompanyForm() {
                     <label>Email</label><span className='text-red-500'>*</span>
                     <Input
                         name='email' type='email'
-                        value={profile?.profile.profileData.email}
+                        value={profile?.profile?.profileData?.email}
                     />
 
                     <label>Mobile number</label>

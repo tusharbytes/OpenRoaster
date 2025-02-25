@@ -1,21 +1,9 @@
-import axios from "axios";
-
-const token = localStorage.getItem("access_token");
-
-const url = "https://roaster.shopifystudio.xyz/api/";
+import instance from "../service/Instance";
 
 export const profileUpdate = async (payload) => {
     
     try {
-        const response = await axios.patch(`${url}business/profile-update`,
-            payload,
-            {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            }
-        );
-        console.log("Update Response:", response.data);
+        const response = await instance.patch(`business/profile-update`, payload);
     } catch (error) {
         console.error("Profile update failed:", error.response ? error.response.data : error.message);
     }
@@ -28,15 +16,7 @@ export const profileImage = async (file) => {
     formData.append("image", file) 
 
     try {
-        const response = await axios.post(`${url}business/change/image`,
-            formData,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            }
-        );
+        const response = await instance.post(`business/change/image`,formData);
 
         return response.data;
     } catch (error) {
@@ -48,3 +28,4 @@ export const profileImage = async (file) => {
     }
 };
 
+ 

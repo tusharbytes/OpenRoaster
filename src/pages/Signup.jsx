@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../service/Instance';
 import React, { useEffect, useState } from 'react';
 import { FaApple } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
@@ -7,6 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import Input from '../common/Input';
 import Container from '../common/Container';
 import { Link, useNavigate } from 'react-router-dom';
+import instance from '../service/Instance';
 const apiUrl = process.env.REACT_APP_API_BASE_URL;
 function Signup() {
 
@@ -65,7 +66,7 @@ function Signup() {
         if (validation()) {
             setLoader(true)
             try {
-                const response = await axios.post(`${apiUrl}/signup`, formSign);
+                const response = await instance.post(`signup`, formSign);
                 // console.log(response.data.errors.email, "response");
                 setLoader(false)
                 if (response.data.errors?.email) {
