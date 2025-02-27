@@ -1,7 +1,7 @@
 import instance from "../service/Instance";
 
 export const profileUpdate = async (payload) => {
-    
+
     try {
         const response = await instance.patch(`business/profile-update`, payload);
     } catch (error) {
@@ -11,12 +11,12 @@ export const profileUpdate = async (payload) => {
 
 
 export const profileImage = async (file) => {
-    
-    const formData = new FormData();
-    formData.append("image", file) 
+
+        const formData = new FormData();
+        formData.append("image", file)
 
     try {
-        const response = await instance.post(`business/change/image`,formData);
+        const response = await instance.post(`business/change/image`, formData);
 
         return response.data;
     } catch (error) {
@@ -24,8 +24,13 @@ export const profileImage = async (file) => {
             "Image upload failed:",
             error.response ? error.response.data : error.message
         );
-        throw error; 
+        throw error;
     }
 };
 
- 
+export const jobCreate = async (payload) => {
+  
+
+    const response = await instance.post(`business/job/create`, payload);
+    return response
+}

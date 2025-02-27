@@ -23,7 +23,7 @@ function Home() {
 
 
                             <div className="hidden md:block">
-                                <Link to="/login" className="bg-black py-4 px-10 rounded-[8px] text-white">
+                                <Link to="/signin" className="bg-black py-4 px-10 rounded-[8px] text-white">
                                     Sign in
                                 </Link>
                             </div>

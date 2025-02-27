@@ -103,11 +103,7 @@ function CompanyForm() {
             try {
                 await profileUpdate(payload);  
                 toast.success("Profile updated successfully!");
-    
-                // Fetch updated profile from the backend
                 dispatch(getProfile());
-    
-                // Reset the form state
                 setFormData({
                     legal_company: '',
                     business_name: '',
@@ -122,7 +118,7 @@ function CompanyForm() {
                     state: '',
                     zipCode: '',
                 });
-                
+
             } catch (error) {
                 toast.error("Failed to update profile.");
                 console.error("Error updating profile:", error);
@@ -131,10 +127,6 @@ function CompanyForm() {
             console.log("Form validation failed", error);
         }
     };
-    
-   
-
-
     return (
         <Container>
             <div className='p-2 max-w-xl mx-auto bg-white rounded-xl space-y-4'>
