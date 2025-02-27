@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "../service/Instance";
+import instance from "../service/Instance";
 
 
 export const getProfile = createAsyncThunk("getProfile", async (_, { rejectWithValue }) => {
     try {
-        const response = await axios.get("me", 
+        const response = await instance.get("me", 
          );
         return response.data.data;
     } catch (error) {

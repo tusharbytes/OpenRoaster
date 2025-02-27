@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Input from '../../common/Input'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IoArrowBackCircleOutline } from 'react-icons/io5'
 import { IoMdAdd } from 'react-icons/io'
 import { FaChevronUp } from 'react-icons/fa'
 import { jobCreate } from '../../api/Api'
 import { toast, ToastContainer } from 'react-toastify'
+import { getProfile } from '../../feature/ProfileSlice'
 
 
 function PostAJob() {
@@ -19,7 +20,13 @@ function PostAJob() {
         4: "Job Setting"
     }
 
+  const dispatch  = useDispatch()
+
+  useEffect(()=>{
+dispatch(getProfile())
+  },[])
     const profile = useSelector((state) => state)
+    console.log(profile,"dff")
     const [summaryAdd, setSummaryAdd] = useState(false)
     const [qualificationsAdd, setQualificationsAdd] = useState(false)
     const [description, setDescription] = useState(false)
@@ -34,7 +41,10 @@ function PostAJob() {
             if (!formData.title) newErrors.title = "Job Title is required";
             if (!formData.location) newErrors.location = "Job Location is required";
             if (!formData.company_name_on_job) newErrors.company_name_on_job = "Company Name is required";
-            if (!formData.num_of_opening || isNaN(formData.num_of_opening)) newErrors.num_of_opening = "Valid number of openings is required";
+            if (!/^\d{4}$/.test(formData.num_of_opening)) {
+                newErrors.num_of_opening = "Number of openings must be a 4-digit number";
+            }
+
             if (!formData.timeing) newErrors.timeing = "Job Timing is required";
         }
 
@@ -58,9 +68,9 @@ function PostAJob() {
             }
         }
 
-        if (step === 4) {             
-            if (!formData.apply_url) {                 
-                newErrors.apply_url = "Application URL is required";             
+        if (step === 4) {
+            if (!formData.apply_url) {
+                newErrors.apply_url = "Application URL is required";
             } else {
                 // URL validation using regex
                 const urlPattern = /^(https?:\/\/)[^\s/$.?#].[^\s]*$/i;
@@ -69,16 +79,9 @@ function PostAJob() {
                 }
             }
         }
-        
-        
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-
-
-
-
 
     const [formData, setFormData] = useState({
         title: "",
@@ -100,17 +103,16 @@ function PostAJob() {
         setSummaryAdd(false)
     }
 
-
     const handleNextStep = () => {
         if (validateStep(stepCount)) {
             setStepCount(stepCount + 1);
         }
     };
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateStep(stepCount)) {
-                await  jobCreate(formData)
-      toast.success("Post created successfully!")
+            await jobCreate(formData)
+            toast.success("Post created successfully!")
         }
     };
 
@@ -271,7 +273,7 @@ function PostAJob() {
                             value={formData.summary_responsibilties}
                             onChange={(e) => setFormData({ ...formData, summary_responsibilties: e.target.value })}
                             className="w-full border rounded-md p-2 placeholder:font-semibold placeholder:text-[#5494DC]" placeholder='Summary  ' rows="4"></textarea>}
-                            {errors.summary_responsibilties && <p className='text-red-500 pb-2'>{errors.summary_responsibilties}</p>}
+                        {errors.summary_responsibilties && <p className='text-red-500 pb-2'>{errors.summary_responsibilties}</p>}
 
                         <div className="border-b py-2 text-[#5494DC] font-semibold flex items-center justify-between">Qualifications & Skills
                             {qualificationsAdd === true ? <FaChevronUp className='cursor-pointer' onClick={() => setQualificationsAdd(false)} /> :
@@ -283,7 +285,7 @@ function PostAJob() {
                             value={formData.equipment_and_skills}
                             onChange={(e) => setFormData({ ...formData, equipment_and_skills: e.target.value })}
                             className="w-full border rounded-md p-2  placeholder:font-semibold placeholder:text-[#5494DC]" placeholder='Qualifications & Skills' rows="4"></textarea>}
-                            {errors.equipment_and_skills && <p className='text-red-500 pb-2'>{errors.equipment_and_skills}</p>}
+                        {errors.equipment_and_skills && <p className='text-red-500 pb-2'>{errors.equipment_and_skills}</p>}
 
                         <div className="border-b py-2 text-[#5494DC] font-semibold flex items-center justify-between">Company Description
                             {description === true ? <FaChevronUp className='cursor-pointer' onClick={() => setDescription(false)} /> :
@@ -294,8 +296,8 @@ function PostAJob() {
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             className="w-full border rounded-md p-2  placeholder:font-semibold placeholder:text-[#5494DC]" placeholder='Company Description' rows="4"></textarea>}
-                            {errors.description && <p className='text-red-500 pb-2'>{errors.description}</p>}
-                   
+                        {errors.description && <p className='text-red-500 pb-2'>{errors.description}</p>}
+
                     </div>
                 )}
 
@@ -350,7 +352,7 @@ function PostAJob() {
                     <button onClick={handleNextStep} className="bg-[#5494DC]  text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600">
                         Next
                     </button>}
-                    <ToastContainer/>
+                <ToastContainer />
             </div>
         </div>
     )

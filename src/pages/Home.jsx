@@ -51,7 +51,7 @@ function Home() {
                                 Post a shift
                             </button>
                             <button className="bg-transparent border border-[#5494DC] text-[18px] py-4 px-8 rounded-[8px] text-[#5494DC]">
-                                Post a job
+                              <Link to={"/postajob"} > Post a job</Link>
                             </button>
                         </div>
                     </div>
