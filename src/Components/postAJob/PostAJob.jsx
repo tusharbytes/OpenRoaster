@@ -12,13 +12,13 @@ import { getProfile } from '../../feature/ProfileSlice'
 function PostAJob() {
     const [stepCount, setStepCount] = useState(0)
 
-    const title = {
-        0: "Job Basics ",
-        1: "Candidate Requirements",
-        2: "Describe the Job",
-        3: "Job Setting",
-        4: "Job Setting"
-    }
+    const title = [
+        "Job Basics ",
+         "Candidate Requirements",
+         "Describe the Job",
+         "Job Setting",
+         "Job Setting"
+    ]
 
   const dispatch  = useDispatch()
 
@@ -88,7 +88,7 @@ dispatch(getProfile())
         location: "",
         company_name_on_job: "",
         num_of_opening: "",
-        timeing: "",
+        timeing:[ ""],
         job_info: "",
         job_type: "",
         skills: "",
@@ -179,10 +179,13 @@ dispatch(getProfile())
                             <div>
                                 <label className="block">Job Timing <span className="text-red-500">*</span></label>
                                 <Input
+                                type="text"
                                     value={formData.timeing}
                                     onChange={(e) => setFormData({ ...formData, timeing: e.target.value })}
                                     error={errors.timeing}
-                                    name="job_timing" required />
+                                    name="job_timing"
+                                    placeholder="9:30 AM - 6:30 PM | Monday to Saturday"
+                                      />
                             </div>
 
                             <p className="text-xs text-gray-500">Please mention job timings correctly, otherwise candidates may not join.</p>

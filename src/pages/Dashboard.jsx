@@ -3,11 +3,22 @@ import { FcBusinessman } from "react-icons/fc";
 import { GoBell } from "react-icons/go";
 import { IoOptionsOutline, IoSettingsOutline } from "react-icons/io5";
 import { MdFormatListBulleted } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Container from "../common/Container";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate()
+
+
+  const handleLogOut = (e) => {
+    const selectOption = e.target.value
+    if (selectOption === "logOut") {
+      localStorage.clear()
+      navigate("/signin")
+    }
+
+  }
 
   return (
     <Container>
@@ -46,14 +57,40 @@ const Dashboard = () => {
               <FcBusinessman />
             </li>
             <span>
-              <select className="text-lg border rounded-lg px-3 py-1 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <select onChange={handleLogOut} className="text-lg w-[20px]   rounded-lg  m-[-25px] bg-white   focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Select</option>
-                <option value="">Log Out</option>
+                <option value="logOut">Log Out</option>
               </select>
             </span>
           </ul>
         </div>
       </div>
+         {/* Mobile Navigation */}
+         {isOpen && (
+                <ul className="sm:hidden flex flex-col items-center bg-white shadow-md p-4 gap-4">
+                    {["Dashboard", "Jobs & Shifts", "Find candidates", "Account users", "Directory", "Messages"].map((item, index) => (
+                        <li key={index} className="cursor-pointer hover:text-blue-500 whitespace-nowrap">
+                            {item}
+                        </li>
+                    ))}
+                    <li className="cursor-pointer hover:text-blue-500">
+                        <IoSettingsOutline size={24} />
+                    </li>
+                    <li className="cursor-pointer hover:text-blue-500">
+                        <GoBell size={24} />
+                    </li>
+                    <li className="cursor-pointer hover:text-blue-500 text-2xl">
+                        <FcBusinessman />
+                    </li>
+                    {/* Logout Dropdown */}
+                    <span>
+                        <select onChange={handleLogOut} className="text-lg rounded-lg p-1 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select</option>
+                            <option value="logOut">Log Out</option>
+                        </select>
+                    </span>
+                </ul>
+            )}
 
       {/* Main Content */}
       <div className="bg-[#F4F9FF] mt-6 p-6">

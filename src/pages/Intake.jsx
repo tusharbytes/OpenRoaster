@@ -35,7 +35,7 @@ function Intake() {
         <SubscriptionPlans />
       ) : profile?.profileData?.stepper === "Profile" ? (
         <CompanyForm />
-      )
+      ) 
       : profile?.profileData?.stepper === "Active" ? (<Dashboard/>)
       : (
         <div className="flex justify-center items-center h-screen">
