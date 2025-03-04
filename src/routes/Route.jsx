@@ -7,6 +7,7 @@ import Intake from "../pages/Intake";
 import Dashboard from "../pages/Dashboard";
 import SubscriptionPlans from "../pages/Subscription";
 import PostAJob from "../Components/postAJob/PostAJob";
+import Payment from "../pages/Payment";
 
 const MyRoutes = () => {
   const routes = useRoutes([
@@ -17,6 +18,8 @@ const MyRoutes = () => {
 
     // Protected Routes
     { element: (<ProtectedRoute><Intake /></ProtectedRoute>), path: "/intake" },
+    { element: (<ProtectedRoute><Payment /></ProtectedRoute>), path: "/payment" },
+
     { element: (<ProtectedRoute><Dashboard /></ProtectedRoute>), path: "/dashboard" },
     { element: (<ProtectedRoute><SubscriptionPlans /></ProtectedRoute>), path: "/subscription" },
     { element: (<ProtectedRoute><PostAJob /></ProtectedRoute>), path: "/postajob" },

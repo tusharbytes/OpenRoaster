@@ -26,7 +26,7 @@ const Dashboard = () => {
       <div className="flex flex-col md:flex-row justify-between items-center py-4 px-6 bg-white  ">
         {/* Logo */}
         <img
-          src="/images/log1.jpg"
+          src="/images/dahboard_logo.svg"
           alt="Logo"
           className="h-12 w-auto md:h-16 cursor-pointer"
         />
@@ -34,8 +34,8 @@ const Dashboard = () => {
         {/* Navbar */}
         <div className="w-full">
           {/* Mobile Menu Button */}
-          <div className="sm:hidden flex justify-start">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-2xl p-2">
+          <div className="sm:hidden flex justify-end">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-4xl p-2">
               <MdFormatListBulleted />
             </button>
           </div>

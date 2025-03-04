@@ -14,25 +14,24 @@ function PostAJob() {
 
     const title = [
         "Job Basics ",
-         "Candidate Requirements",
-         "Describe the Job",
-         "Job Setting",
-         "Job Setting"
+        "Candidate Requirements",
+        "Describe the Job",
+        "Job Setting",
+        "Job Setting"
     ]
 
-  const dispatch  = useDispatch()
+    const dispatch = useDispatch()
 
-  useEffect(()=>{
-dispatch(getProfile())
-  },[])
+    useEffect(() => {
+        dispatch(getProfile())
+    }, [])
     const profile = useSelector((state) => state)
-    console.log(profile,"dff")
     const [summaryAdd, setSummaryAdd] = useState(false)
     const [qualificationsAdd, setQualificationsAdd] = useState(false)
     const [description, setDescription] = useState(false)
     const [click, setClick] = useState(false)
     const [settingClick, setSettingClick] = useState(false)
-
+    const [isOpen, setIsOpen] = useState(false);
     const [errors, setErrors] = useState({});
     const validateStep = (step) => {
         let newErrors = {};
@@ -82,13 +81,23 @@ dispatch(getProfile())
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+    
+    const [time, setTime] = useState({
+        entrytimng: "",
+        depatureTiming: " "
+    })
+    const [ShowTime,setShowTime] = useState(false)
+
 
     const [formData, setFormData] = useState({
         title: "",
         location: "",
         company_name_on_job: "",
         num_of_opening: "",
-        timeing:[ ""],
+        timeing: {
+            entrytimng : "",
+            depatureTiming : "",
+        } ,
         job_info: "",
         job_type: "",
         skills: "",
@@ -99,21 +108,44 @@ dispatch(getProfile())
         total_experience: "",
         candidate_apply: ""
     })
+
     const handleUpSummary = () => {
         setSummaryAdd(false)
     }
+    const handleOpenPop = ()=>{
+        setIsOpen(true)
+        setTime("")
+    }
+
+    const formatTime = (time) => {
+        if (!time) return "";
+        let [hours, minutes] = time.split(":");
+        let period = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12; // Convert 0 to 12 for 12 AM
+        return `${hours}:${minutes} ${period}`;
+    }
+    const timingAdd = () => {
+        const formattedEntry = formatTime(time?.entrytimng);
+        console.log(formattedEntry)
+        const formattedDeparture = formatTime(time?.depatureTiming);
+        setFormData((prev) => ({
+            ...prev,
+            timeing: `${formattedEntry} - ${formattedDeparture}`
+        }));
+        setIsOpen(false);   
+    };
 
     const handleNextStep = () => {
-        if (validateStep(stepCount)) {
+        // if (validateStep(stepCount)) {
             setStepCount(stepCount + 1);
-        }
+        // }
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validateStep(stepCount)) {
+        // if (validateStep(stepCount)) {
             await jobCreate(formData)
             toast.success("Post created successfully!")
-        }
+        // }
     };
 
 
@@ -177,16 +209,66 @@ dispatch(getProfile())
                             </div>
 
                             <div>
+
                                 <label className="block">Job Timing <span className="text-red-500">*</span></label>
-                                <Input
-                                type="text"
-                                    value={formData.timeing}
-                                    onChange={(e) => setFormData({ ...formData, timeing: e.target.value })}
+                              {ShowTime ?  <Input
+                                    type="text"
+                                    value={`${formData?.timeing}/ Monday to Friday`}
+                                    onChange={handleOpenPop}
                                     error={errors.timeing}
                                     name="job_timing"
-                                    placeholder="9:30 AM - 6:30 PM | Monday to Saturday"
-                                      />
+                                    placeholder="9:30 AM - 6:30 PM"
+                                />:
+                                <button
+                                    className='px-3 w-full py-[1.5rem] placeholder-black border rounded-[1.375rem] text-start'
+                                    value={`${formData?.timeing?.entrytimng || ""}  - ${formData?.timeing?.depatureTiming ||""}/ Monday to Friday`}
+                                    onClick={handleOpenPop}
+                                    error={errors.timeing}
+                                    name="job_timing"
+                                    placeholder="9:30 AM - 6:30 PM"
+                            >/ Monday to Friday</button>}
                             </div>
+                            {isOpen && (
+                                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                                        <div className="mt-4">
+                                            <label className="block text-gray-700">Entry Time</label>
+                                            <input
+                                                type="time"
+                                                value={time.entrytimng}
+                                                onChange={(e) => setTime({ ...time, entrytimng: e.target.value })}
+                                                className="w-full p-2 border rounded-lg mb-2"
+                                            />
+                                            <label className="block text-gray-700">Departure Time</label>
+                                            <input
+                                                type="time"
+                                                value={time.depatureTiming}
+                                                onChange={(e) => setTime({ ...time, depatureTiming: e.target.value })}
+                                                className="w-full p-2 border rounded-lg mb-2"
+                                            />
+                                        </div>
+                                        <div className="mt-4 flex justify-between">
+                                            <button
+                                                onClick={() => setIsOpen(false)
+
+                                                }
+                                                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                            >
+                                                Close
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setShowTime(true)
+                                                    timingAdd()
+                                                    setIsOpen(false)}}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                            >
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             <p className="text-xs text-gray-500">Please mention job timings correctly, otherwise candidates may not join.</p>
                         </div>
