@@ -8,6 +8,7 @@ import Dashboard from "../pages/Dashboard";
 import SubscriptionPlans from "../pages/Subscription";
 import PostAJob from "../Components/postAJob/PostAJob";
 import Payment from "../pages/Payment";
+import CreateJobView from "../Components/ViewUserCreateJob/CreateJobView";
 
 const MyRoutes = () => {
   const routes = useRoutes([
@@ -23,6 +24,8 @@ const MyRoutes = () => {
     { element: (<ProtectedRoute><Dashboard /></ProtectedRoute>), path: "/dashboard" },
     { element: (<ProtectedRoute><SubscriptionPlans /></ProtectedRoute>), path: "/subscription" },
     { element: (<ProtectedRoute><PostAJob /></ProtectedRoute>), path: "/postajob" },
+    { element: (<ProtectedRoute><CreateJobView /></ProtectedRoute>), path: "/createjobview" },
+
   ]);
 
   return routes;

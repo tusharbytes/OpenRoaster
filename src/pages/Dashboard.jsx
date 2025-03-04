@@ -25,23 +25,31 @@ const Dashboard = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-center py-4 px-6 bg-white  ">
         {/* Logo */}
-        <img
-          src="/images/dahboard_logo.svg"
-          alt="Logo"
-          className="h-12 w-auto md:h-16 cursor-pointer"
-        />
+        <div className="flex items-center justify-between  ">
+  {/* Logo */}
+  <img
+    src="/images/dahboard_logo.svg"
+    alt="Logo"
+    className="h-12 w-auto md:h-16 cursor-pointer"
+  />
 
-        {/* Navbar */}
-        <div className="w-full">
-          {/* Mobile Menu Button */}
-          <div className="sm:hidden flex justify-end">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-4xl p-2">
-              <MdFormatListBulleted />
-            </button>
+  {/* Mobile Menu Button (Visible on small screens) */}
+  <div className="flex sm:hidden justify-end w-[250px]">
+    <button
+      onClick={() => setIsOpen(!isOpen)}
+      className="text-3xl p-2"
+    >
+      <MdFormatListBulleted />
+    </button>
+  </div>
           </div>
+        {/* Navbar */}
+        <span className="w-full  md:flex justify-end items-center">
+          {/* Mobile Menu Button */}
+          
 
           {/* Desktop Navigation */}
-          <ul className="hidden sm:flex flex-wrap justify-center items-center gap-6 text-lg">
+          <ul className="hidden sm:flex flex-wrap justify-center items-center gap-4 text-lg">
             {["Dashboard", "Jobs & Shifts", "Find candidates", "Account users", "Directory", "Messages"].map((item, index) => (
               <li key={index} className="cursor-pointer hover:text-blue-500 whitespace-nowrap">
                 {item}
@@ -63,7 +71,7 @@ const Dashboard = () => {
               </select>
             </span>
           </ul>
-        </div>
+        </span>
       </div>
          {/* Mobile Navigation */}
          {isOpen && (

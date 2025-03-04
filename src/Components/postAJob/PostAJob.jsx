@@ -7,6 +7,8 @@ import { FaChevronUp } from 'react-icons/fa'
 import { jobCreate } from '../../api/Api'
 import { toast, ToastContainer } from 'react-toastify'
 import { getProfile } from '../../feature/ProfileSlice'
+import CreateJobView from '../ViewUserCreateJob/CreateJobView'
+import { useNavigate } from 'react-router-dom'
 
 
 function PostAJob() {
@@ -25,6 +27,7 @@ function PostAJob() {
     useEffect(() => {
         dispatch(getProfile())
     }, [])
+    const navigate = useNavigate() 
     const profile = useSelector((state) => state)
     const [summaryAdd, setSummaryAdd] = useState(false)
     const [qualificationsAdd, setQualificationsAdd] = useState(false)
@@ -81,12 +84,15 @@ function PostAJob() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    
+
     const [time, setTime] = useState({
         entrytimng: "",
         depatureTiming: " "
     })
-    const [ShowTime,setShowTime] = useState(false)
+    const [ShowTime, setShowTime] = useState(false)
+
+    const [saveFormData, setSaveFormData] = useState([])
+    console.log(saveFormData, "LL")
 
 
     const [formData, setFormData] = useState({
@@ -95,9 +101,9 @@ function PostAJob() {
         company_name_on_job: "",
         num_of_opening: "",
         timeing: {
-            entrytimng : "",
-            depatureTiming : "",
-        } ,
+            entrytimng: "",
+            depatureTiming: "",
+        },
         job_info: "",
         job_type: "",
         skills: "",
@@ -112,10 +118,15 @@ function PostAJob() {
     const handleUpSummary = () => {
         setSummaryAdd(false)
     }
-    const handleOpenPop = ()=>{
+    const handleOpenPop = () => {
         setIsOpen(true)
         setTime("")
     }
+    const handleSaveJobForm = () => {
+        setSaveFormData({ ...formData })
+
+    }
+
 
     const formatTime = (time) => {
         if (!time) return "";
@@ -132,26 +143,28 @@ function PostAJob() {
             ...prev,
             timeing: `${formattedEntry} - ${formattedDeparture}`
         }));
-        setIsOpen(false);   
+        setIsOpen(false);
     };
 
     const handleNextStep = () => {
         // if (validateStep(stepCount)) {
-            setStepCount(stepCount + 1);
+        setStepCount(stepCount + 1);
         // }
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
         // if (validateStep(stepCount)) {
-            await jobCreate(formData)
-            toast.success("Post created successfully!")
+        await jobCreate(formData)
+        toast.success("Post created successfully!")
+        navigate("/createjobview")
+        
         // }
-    };
+    }
 
 
     return (
         <div className="bg-gradient-to-b from-blue-500 to-gray-900 min-h-screen flex flex-col justify-center items-center p-4 relative">
-
+            {stepCount === -1 && <CreateJobView saveFormData={saveFormData} />}
             {/* Back Button */}
             {stepCount > 0 && (
                 <button
@@ -211,22 +224,22 @@ function PostAJob() {
                             <div>
 
                                 <label className="block">Job Timing <span className="text-red-500">*</span></label>
-                              {ShowTime ?  <Input
+                                {ShowTime ? <Input
                                     type="text"
                                     value={`${formData?.timeing}/ Monday to Friday`}
                                     onChange={handleOpenPop}
                                     error={errors.timeing}
                                     name="job_timing"
                                     placeholder="9:30 AM - 6:30 PM"
-                                />:
-                                <button
-                                    className='px-3 w-full py-[1.5rem] placeholder-black border rounded-[1.375rem] text-start'
-                                    value={`${formData?.timeing?.entrytimng || ""}  - ${formData?.timeing?.depatureTiming ||""}/ Monday to Friday`}
-                                    onClick={handleOpenPop}
-                                    error={errors.timeing}
-                                    name="job_timing"
-                                    placeholder="9:30 AM - 6:30 PM"
-                            >/ Monday to Friday</button>}
+                                /> :
+                                    <button
+                                        className='px-3 w-full py-[1.5rem] placeholder-black border rounded-[1.375rem] text-start'
+                                        value={`${formData?.timeing?.entrytimng || ""}  - ${formData?.timeing?.depatureTiming || ""}/ Monday to Friday`}
+                                        onClick={handleOpenPop}
+                                        error={errors.timeing}
+                                        name="job_timing"
+                                        placeholder="9:30 AM - 6:30 PM"
+                                    >/ Monday to Friday</button>}
                             </div>
                             {isOpen && (
                                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -260,7 +273,8 @@ function PostAJob() {
                                                 onClick={() => {
                                                     setShowTime(true)
                                                     timingAdd()
-                                                    setIsOpen(false)}}
+                                                    setIsOpen(false)
+                                                }}
                                                 className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                                             >
                                                 Save
@@ -431,7 +445,10 @@ function PostAJob() {
             </div>
 
             <div className="w-[250px] flex justify-center mt-4">
-                {stepCount === 4 ? <button onClick={(e) => handleSubmit(e)} className="bg-[#5494DC]   text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600">
+                {stepCount === 4 ? <button onClick={(e) => {
+                    handleSubmit(e)
+                    handleSaveJobForm()
+                }} className="bg-[#5494DC]   text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600">
                     Continue
                 </button> :
                     <button onClick={handleNextStep} className="bg-[#5494DC]  text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600">
