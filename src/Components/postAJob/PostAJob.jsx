@@ -8,7 +8,6 @@ import { jobCreate } from '../../api/Api'
 import { toast, ToastContainer } from 'react-toastify'
 import { getProfile } from '../../feature/ProfileSlice'
 import CreateJobView from '../ViewUserCreateJob/CreateJobView'
-import { useNavigate } from 'react-router-dom'
 
 
 function PostAJob() {
@@ -19,7 +18,8 @@ function PostAJob() {
         "Candidate Requirements",
         "Describe the Job",
         "Job Setting",
-        "Job Setting"
+        "Job Setting",
+        "Your Form"
     ]
 
     const dispatch = useDispatch()
@@ -27,7 +27,6 @@ function PostAJob() {
     useEffect(() => {
         dispatch(getProfile())
     }, [])
-    const navigate = useNavigate() 
     const profile = useSelector((state) => state)
     const [summaryAdd, setSummaryAdd] = useState(false)
     const [qualificationsAdd, setQualificationsAdd] = useState(false)
@@ -91,8 +90,6 @@ function PostAJob() {
     })
     const [ShowTime, setShowTime] = useState(false)
 
-    const [saveFormData, setSaveFormData] = useState([])
-    console.log(saveFormData, "LL")
 
 
     const [formData, setFormData] = useState({
@@ -122,12 +119,6 @@ function PostAJob() {
         setIsOpen(true)
         setTime("")
     }
-    const handleSaveJobForm = () => {
-        setSaveFormData({ ...formData })
-
-    }
-
-
     const formatTime = (time) => {
         if (!time) return "";
         let [hours, minutes] = time.split(":");
@@ -147,26 +138,24 @@ function PostAJob() {
     };
 
     const handleNextStep = () => {
-        // if (validateStep(stepCount)) {
+        if (validateStep(stepCount)) {
         setStepCount(stepCount + 1);
-        // }
+        }
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // if (validateStep(stepCount)) {
+        if (validateStep(stepCount)) {
         await jobCreate(formData)
         toast.success("Post created successfully!")
-        navigate("/createjobview")
         
-        // }
+        }   
     }
 
 
     return (
         <div className="bg-gradient-to-b from-blue-500 to-gray-900 min-h-screen flex flex-col justify-center items-center p-4 relative">
-            {stepCount === -1 && <CreateJobView saveFormData={saveFormData} />}
             {/* Back Button */}
-            {stepCount > 0 && (
+            {       stepCount > 0 && (
                 <button
                     onClick={() => setStepCount(stepCount - 1)}
                     className="absolute top-4 left-6 text-white p-2 rounded-md"
@@ -442,12 +431,18 @@ function PostAJob() {
                             className="w-full px-3 py-2 border rounded-md" type="url" required />
                     </div>
                 )}
-            </div>
+           
+
+            {stepCount === 5 && (
+                    <div>
+                       <CreateJobView formData={formData} />
+                    </div>
+                )}
+ </div>
 
             <div className="w-[250px] flex justify-center mt-4">
-                {stepCount === 4 ? <button onClick={(e) => {
+                {stepCount === 5 ? <button onClick={(e) => {
                     handleSubmit(e)
-                    handleSaveJobForm()
                 }} className="bg-[#5494DC]   text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600">
                     Continue
                 </button> :
@@ -456,6 +451,8 @@ function PostAJob() {
                     </button>}
                 <ToastContainer />
             </div>
+             
+            
         </div>
     )
 }

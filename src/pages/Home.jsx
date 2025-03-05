@@ -11,11 +11,9 @@ function Home() {
                         <div className="flex justify-between items-center w-full">
 
                             <div className='flex items-center'>
-                                <p className='   text-2xl text-white font-semibold'>
-                                    OPEN
-                                </p>
+                                
                                 <img
-                                    src="../images/logo.jpg"
+                                    src="../images/dahboard_logo.svg"
                                     alt="Logo"
                                     className="h-12  cursor-pointer"
                                 />
