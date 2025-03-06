@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { IoArrowBackCircleOutline } from 'react-icons/io5'
 import { IoMdAdd } from 'react-icons/io'
 import { FaChevronUp } from 'react-icons/fa'
-import { jobCreate } from '../../api/Api'
+import { getJobCreate, jobCreate } from '../../api/Api'
 import { toast, ToastContainer } from 'react-toastify'
 import { getProfile } from '../../feature/ProfileSlice'
 import CreateJobView from '../ViewUserCreateJob/CreateJobView'
@@ -138,24 +138,26 @@ function PostAJob() {
     };
 
     const handleNextStep = () => {
-        if (validateStep(stepCount)) {
+        // if (validateStep(stepCount)) {
         setStepCount(stepCount + 1);
-        }
+        // }
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validateStep(stepCount)) {
-        await jobCreate(formData)
+        // if (validateStep(stepCount)) {
+       const response =  await jobCreate(formData)
+       if(response.data.data.id){
+      await getJobCreate(response.data.data.id)
         toast.success("Post created successfully!")
-        
-        }   
+       }
+        // }   
     }
 
 
     return (
         <div className="bg-gradient-to-b from-blue-500 to-gray-900 min-h-screen flex flex-col justify-center items-center p-4 relative">
             {/* Back Button */}
-            {       stepCount > 0 && (
+            {stepCount > 0 && (
                 <button
                     onClick={() => setStepCount(stepCount - 1)}
                     className="absolute top-4 left-6 text-white p-2 rounded-md"
@@ -431,28 +433,45 @@ function PostAJob() {
                             className="w-full px-3 py-2 border rounded-md" type="url" required />
                     </div>
                 )}
-           
 
-            {stepCount === 5 && (
+
+                {stepCount === 5 && (
                     <div>
-                       <CreateJobView formData={formData} />
+                        <CreateJobView formData={formData} />
                     </div>
                 )}
- </div>
+            </div>
 
             <div className="w-[250px] flex justify-center mt-4">
-                {stepCount === 5 ? <button onClick={(e) => {
-                    handleSubmit(e)
-                }} className="bg-[#5494DC]   text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600">
-                    Continue
-                </button> :
-                    <button onClick={handleNextStep} className="bg-[#5494DC]  text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600">
+                {stepCount === 4 ? (
+                    <button
+                        onClick={(e) => {
+                            handleNextStep();
+                            handleSubmit(e);
+                        }}
+                        className="bg-[#5494DC] text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600"
+                    >
+                        Continue
+                    </button>
+                ) : stepCount === 5 ? (
+                    <button className="bg-[#5494DC] text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600">
+                        Update
+                    </button>
+                ) : stepCount >= 0 && stepCount <= 3 && (
+                    <button
+                        onClick={handleNextStep}
+                        className="bg-[#5494DC] text-white py-3 px-[6rem] rounded-3xl hover:bg-blue-600"
+                    >
                         Next
-                    </button>}
+                    </button>
+                )}
+
+
                 <ToastContainer />
+
             </div>
-             
-            
+
+
         </div>
     )
 }

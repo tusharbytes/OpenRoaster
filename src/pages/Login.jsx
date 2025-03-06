@@ -63,9 +63,9 @@ function Login() {
                 
                     
                     if (response?.data?.user?.plan) {
-                        navigate("/dashboard");
+                        navigate("/dashboard/home");
                     } else if (response?.data?.user?.stepper === "Subscription") {
-                        navigate("/subscription");
+                        navigate("/dashboard/subscription");
                     } else {
                         navigate("/intake");
                     }

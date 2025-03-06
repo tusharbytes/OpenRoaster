@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import CompanyForm from "../Components/CompanyProfileForm";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile, resetProfile } from "../feature/ProfileSlice"; // Combined imports
-import SubscriptionPlans from "./Subscription";
+import SubscriptionPlans from "./dashboard/Subscription";
 import { useNavigate } from "react-router-dom";
-import Dashboard from "./Dashboard";
+import Dashboard from "./dashboard/Dashboard";
 
 function Intake() {
   const dispatch = useDispatch();
