@@ -1,13 +1,8 @@
 import React, { useState } from "react";
-import { FcBusinessman } from "react-icons/fc";
-import { GoBell } from "react-icons/go";
-import { IoOptionsOutline, IoSettingsOutline } from "react-icons/io5";
-import { MdFormatListBulleted } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import Container from "../../common/Container";
-import { IoMdSettings } from "react-icons/io";
-import Settings from "./Settings";
-import Topbar from "../../Components/Topbar";
+import Topbar from "../../Components/Topbar"; 
+import { IoOptionsOutline } from "react-icons/io5";
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard" },

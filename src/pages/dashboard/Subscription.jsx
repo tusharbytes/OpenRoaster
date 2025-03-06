@@ -111,7 +111,7 @@ const SubscriptionPlans = () => {
                         {plans?.map((plan, index) => (
                             <div
                                 key={index}
-                            className={` border border-  bg-white flex flex-col rounded-xl p-6   shadow-lg  ${profile.profile.profileData.plan.includes(plan.title)? "border-4 border-blue-500 border":"" } `}
+                            className={` border border-  bg-white flex flex-col rounded-xl p-6   shadow-lg  ${profile?.profile?.profileData?.plan?.includes(plan.title)? "border-4 border-blue-500 border":"" } `}
                             >
                                 <h3 className="text-lg font-semibold text-center text-gray-900 ">{plan?.title}</h3>
                                 <p className="text-sm text-center text-gray-500">{plan?.subtitle}</p>

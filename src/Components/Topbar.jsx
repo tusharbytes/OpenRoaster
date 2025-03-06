@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FcBusinessman } from "react-icons/fc";
 import { GoBell } from "react-icons/go";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -6,8 +6,17 @@ import { MdFormatListBulleted } from "react-icons/md";
 import { Link, useNavigate, } from "react-router-dom";
 import Container from "../common/Container";
 import { IoMdSettings } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "../feature/ProfileSlice";
 function Topbar() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const profile = useSelector((state) => state)
+
+    useEffect(()=>{
+        dispatch(getProfile())
+    },[])
+
     const [isOpen, setIsOpen] = useState(false);
 
     const handleLogOut = () => {
@@ -16,6 +25,7 @@ function Topbar() {
     }
 
     return (
+
         <Container>
         <div className=" ">
      
@@ -71,9 +81,9 @@ function Topbar() {
                                 <Link className="cursor-pointer hover:text-blue-500">
                                     <GoBell size={24} />
                                 </Link>
-                                <Link className="cursor-pointer hover:text-blue-500 text-2xl md:text-4xl">
+                              {profile?.profile?.profileData?.business.image ? <div><img src={profile?.profile?.profileData?.business.image } className="w-[25px] rounded-full" /> </div>: <Link className="cursor-pointer hover:text-blue-500 text-2xl md:text-4xl">
                                     <FcBusinessman />
-                                </Link> 
+                                </Link> }
                                  <select
                         onChange={(e) => e.target.value === "logOut" && handleLogOut()}
                         className=" w-[20px]  rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"

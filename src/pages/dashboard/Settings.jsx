@@ -3,7 +3,7 @@ import Container from "../../common/Container";
 import { Link } from "react-router-dom";
 
 const settingsOptions = [
-  { name: "Edit profile", path: "" },
+  { name: "Edit profile", path: "/dashboard/editprofile" },
   { name: "My Subscription", path: "/dashboard/subscription" },
   { name: " Change password" },
   { name: "Terms and conditions" },

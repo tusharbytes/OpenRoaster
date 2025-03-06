@@ -11,6 +11,7 @@ import Payment from "../pages/Payment";
 import CreateJobView from "../Components/ViewUserCreateJob/CreateJobView";
 import Settings from "../pages/dashboard/Settings";
 import Topbar from "../Components/Topbar";
+import CompanyForm from "../Components/CompanyProfileForm";
 
 const MyRoutes = () => {
   const routes = useRoutes([
@@ -29,6 +30,8 @@ const MyRoutes = () => {
 // dashboard routes
 
     { element: (<ProtectedRoute><Topbar/><Dashboard /> </ProtectedRoute>), path: "/dashboard/home" },
+    { element: (<ProtectedRoute><Topbar/><CompanyForm /> </ProtectedRoute>), path: "/dashboard/editprofile" },
+
     { element: (<ProtectedRoute><Topbar/><Settings /></ProtectedRoute>), path: "/dashboard/setting" },
     { element: (<ProtectedRoute><Topbar/><SubscriptionPlans /></ProtectedRoute>), path: "/dashboard/subscription" },
 

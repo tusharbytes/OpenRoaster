@@ -10,6 +10,7 @@ import { getProfile } from '../feature/ProfileSlice';
 
 
 function CompanyForm() {
+
     const [formData, setFormData] = useState({
         legal_company: '',
         business_name: '',
@@ -26,12 +27,15 @@ function CompanyForm() {
     });
 
 
+
     const [image, setImage] = useState(null)
     const [preview, setPreview] = useState(null);
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    
+    useEffect(()=>{
+        dispatch(getProfile ())
+    },[])
     
 
     const handleFileChange = async (e) => {
@@ -48,7 +52,7 @@ function CompanyForm() {
     const [error, setError] = useState({});
 
     const profile = useSelector((state) => state)
-   
+   console.log(profile?.profile?.profileData?.business)
     const payload = {
         name: formData.business_name,
         established_year: formData.established_year,
@@ -160,7 +164,7 @@ function CompanyForm() {
                     <label>Legal company</label><span className='text-red-500'>*</span>
                     <Input
                         name='legal_company'
-                        value={formData.legal_company}
+                        value={formData.legal_company ||profile?.profile?.profileData?.business?.legal_company}
                         onChange={(e) => setFormData({ ...formData, legal_company: e.target.value })}
                         required
                         error={error.legal_company}
@@ -169,7 +173,7 @@ function CompanyForm() {
                     <label>Business name</label><span className='text-red-500'>*</span>
                     <Input
                         name='business_name'
-                        value={formData.business_name}
+                        value={formData.business_name ||profile?.profile?.profileData?.business?.business_name }
                         onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
                         required
                         error={error.business_name}
@@ -179,7 +183,7 @@ function CompanyForm() {
                     <Input
                         name='established_year'
                         type='number'
-                        value={formData.established_year}
+                        value={formData.established_year||profile?.profile?.profileData?.business?.established_year}
                         onChange={(e) => setFormData({ ...formData, established_year: e.target.value })}
                         required
                         error={error.established_year}
@@ -196,19 +200,19 @@ function CompanyForm() {
                         name='mobile_number'
                         type='number'
 
-                        value={formData.mobile_number}
+                        value={formData.mobile_number||profile?.profile?.profileData?.business?.mobile_number}
                         onChange={(e) => setFormData({ ...formData, mobile_number: e.target.value })}
                         required
                     />
                     <label>Licensed number</label>
                     <Input
-                        value={formData.licensed_number}
+                        value={formData.licensed_number ||profile?.profile?.profileData?.business?.licensed_number}
                         onChange={(e) => setFormData({ ...formData, licensed_number: e.target.value })}
                         required
                     />
                     <label>States Licensed </label>
                     <Input
-                        value={formData.states_licensed}
+                        value={formData.states_licensed ||profile?.profile?.profileData?.business?.state_licensed}
                         onChange={(e) => setFormData({ ...formData, states_licensed: e.target.value })}
                         required
                     />
@@ -219,7 +223,7 @@ function CompanyForm() {
                     <label>Address 1</label>
                     <Input
                         name='address1'
-                        value={formData.address1}
+                        value={formData.address1||profile?.profile?.profileData?.business?.address_1}
                         onChange={(e) => setFormData({ ...formData, address1: e.target.value })}
                         required
                         error={error.address1}
@@ -227,7 +231,7 @@ function CompanyForm() {
                     <label>Address 2</label>
                     <Input
                         name='address1'
-                        value={formData.address2}
+                        value={formData.address2 ||profile?.profile?.profileData?.business?.address_2}
                         onChange={(e) => setFormData({ ...formData, address2: e.target.value })}
                         required
                         error={error.address1}
@@ -235,7 +239,7 @@ function CompanyForm() {
                     <label>City</label>
                     <Input
                         name='city'
-                        value={formData.city}
+                        value={formData.city ||profile?.profile?.profileData?.business?.city}
                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
 
                         error={error.city}
@@ -244,7 +248,7 @@ function CompanyForm() {
                     <label>State</label>
                     <Input
                         name='state'
-                        value={formData.state}
+                        value={formData.state ||profile?.profile?.profileData?.business?.state}
                         onChange={(e) => setFormData({ ...formData, state: e.target.value })}
 
                         error={error.state}
@@ -254,7 +258,7 @@ function CompanyForm() {
                     <Input
                         name='zipCode'
                         type='number'
-                        value={formData.zipCode}
+                        value={formData.zipCode ||profile?.profile?.profileData?.business?.zip_code}
                         onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
                         required
                         error={error.zipCode}

@@ -36,7 +36,7 @@ function Intake() {
       ) : profile?.profileData?.stepper === "Profile" ? (
         <CompanyForm />
       ) 
-      : profile?.profileData?.stepper === "Active" ? (<Dashboard/>)
+      : profile?.profileData?.stepper === "Active" ? (navigate("/dashboard/home"))
       : (
         <div className="flex justify-center items-center h-screen">
         <p className="text-center animate-bounce">Searching....</p> </div> // ✅ Handle undefined case
