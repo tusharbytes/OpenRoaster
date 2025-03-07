@@ -4,6 +4,7 @@ import Container from "../../common/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { profileUpdate } from "../../api/Api";
 import { getProfile } from "../../feature/ProfileSlice";
+import Loader from "../../common/Loader";
 
 const plans = [
     {
@@ -77,74 +78,67 @@ const plans = [
 const SubscriptionPlans = () => {
 
     const dispatch = useDispatch()
+    const [loader, setLoader] = useState(false)
 
-
-    useEffect(() => {
-        dispatch(getProfile())
+    useEffect( () => {
+        setLoader(true)
+         dispatch(getProfile())
+      setLoader(false)
     }, [])
-
-
-
     const profile = useSelector((state) => state)
-    // console.log(profile.profile.profileData.plan)
-
-
     const handleAddPlan = async (i) => {
-
-
         await profileUpdate({ plan: i })
-
-        dispatch(getProfile())
+            dispatch(getProfile())
 
     }
-
-
     return (
         <Container>
-            <div className="bg-blue-50 min-h-screen  py-10">
-                <div className="px-4  ">
-                    <h2 className="text-3xl font-bold text-center py-3">Choose your right plan!</h2>
-                    <p className="text-gray-600 text-center">
-                        Select from best plans, ensuring a perfect match. Need more or less? Customize your subscription for a seamless fit!
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4   gap-2 mt-8">
-                        {plans?.map((plan, index) => (
-                            <div
-                                key={index}
-                            className={` border border-  bg-white flex flex-col rounded-xl p-6   shadow-lg  ${profile?.profile?.profileData?.plan?.includes(plan.title)? "border-4 border-blue-500 border":"" } `}
-                            >
-                                <h3 className="text-lg font-semibold text-center text-gray-900 ">{plan?.title}</h3>
-                                <p className="text-sm text-center text-gray-500">{plan?.subtitle}</p>
-                                {plan.price && (
-                                    <p className="text-3xl font-bold flex justify-center mt-2">
-                                        {plan?.price} <span className="text-blue-500 text-xl">{plan?.day}</span>
-                                    </p>
-                                )}
-                                <p className="font-semibold py-4">Features:</p>
-                                <ul className="text-sm text-gray-700">
-                                    {plan?.features?.map((feature, i) => (
-                                        <li key={i} className="flex items-center gap-2">
-                                            <IoMdCheckmarkCircleOutline className="text-green-500 text-lg" />
-                                            <p>{feature}</p>
-                                        </li>
-                                    ))}
-                                </ul>
-                                <div className="mt-auto">
-                                    <button
-                                    disabled={profile?.profile?.profileData?.plan?.includes(plan?.title)}
-                                        onClick={() => handleAddPlan(plan.title, index)}
-                                        className={`mt-6 w-full py-3 rounded-full font-semibold bg-blue-500 hover:bg-blue-700 text-white ${profile?.profile?.profileData?.plan?.includes(plan?.title) ? "bg-green-500 hover:bg-green-500 cursor-not-allowed " : "bg-green"}`}
-                                    >
-                                        {profile?.profile?.profileData?.plan?.includes(plan?.title) ? "Active" : plan.buttonText}
-                                    </button>
+            {profile?.profile.loading ? <Loader /> :
+                <div className="bg-blue-50 min-h-screen  py-10">
 
+                    <div className="px-4  ">
+                        <h2 className="text-3xl font-bold text-center py-3">Choose your right plan!</h2>
+                        <p className="text-gray-600 text-center">
+                            Select from best plans, ensuring a perfect match. Need more or less? Customize your subscription for a seamless fit!
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4   gap-2 mt-8">
+                            {plans?.map((plan, index) => (
+                                <div
+                                    key={index}
+                                    className={` border border-  bg-white flex flex-col rounded-xl p-6   shadow-lg  ${profile?.profile?.profileData?.plan?.includes(plan.title) ? "border-4 border-blue-500 border" : ""} `}
+                                >
+                                    <h3 className="text-lg font-semibold text-center text-gray-900 ">{plan?.title}</h3>
+                                    <p className="text-sm text-center text-gray-500">{plan?.subtitle}</p>
+                                    {plan.price && (
+                                        <p className="text-3xl font-bold flex justify-center mt-2">
+                                            {plan?.price} <span className="text-blue-500 text-xl">{plan?.day}</span>
+                                        </p>
+                                    )}
+                                    <p className="font-semibold py-4">Features:</p>
+                                    <ul className="text-sm text-gray-700">
+                                        {plan?.features?.map((feature, i) => (
+                                            <li key={i} className="flex items-center gap-2">
+                                                <IoMdCheckmarkCircleOutline className="text-green-500 text-lg" />
+                                                <p>{feature}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <div className="mt-auto">
+                                        <button
+                                            disabled={profile?.profile?.profileData?.plan?.includes(plan?.title)}
+                                            onClick={() => handleAddPlan(plan.title, index)}
+                                            className={`mt-6 w-full py-3 rounded-full font-semibold bg-blue-500 hover:bg-blue-700 text-white ${profile?.profile?.profileData?.plan?.includes(plan?.title) ? "bg-green-500 hover:bg-green-500 cursor-not-allowed " : "bg-green"}`}
+                                        >
+                                            {profile?.profile?.profileData?.plan?.includes(plan?.title) ? "Active" : plan.buttonText}
+                                        </button>
+
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
-
+            }
         </Container>
     );
 };

@@ -8,6 +8,7 @@ import { getJobCreate, jobCreate } from '../../api/Api'
 import { toast, ToastContainer } from 'react-toastify'
 import { getProfile } from '../../feature/ProfileSlice'
 import CreateJobView from '../ViewUserCreateJob/CreateJobView'
+import Loader from '../../common/Loader'
 
 
 function PostAJob() {
@@ -155,6 +156,8 @@ function PostAJob() {
 
 
     return (
+        <>
+          {profile?.profile.loading ? <Loader /> :
         <div className="bg-gradient-to-b from-blue-500 to-gray-900 min-h-screen flex flex-col justify-center items-center p-4 relative">
             {/* Back Button */}
             {stepCount > 0 && (
@@ -472,7 +475,8 @@ function PostAJob() {
             </div>
 
 
-        </div>
+        </div>}
+        </>
     )
 }
 

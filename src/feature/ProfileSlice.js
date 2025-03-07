@@ -20,12 +20,7 @@ export const profileSlice = createSlice({
         error: null,
     },
     reducers: {
-        resetProfile: (state) => {
-            
-            state.profileData = null;  
-            state.error = null;  
-            state.loading= false;
-          },
+       
     },
     extraReducers: (builder) => {
         builder

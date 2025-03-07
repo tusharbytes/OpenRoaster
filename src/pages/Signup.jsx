@@ -8,7 +8,8 @@ import Input from '../common/Input';
 import Container from '../common/Container';
 import { Link, useNavigate } from 'react-router-dom';
 import instance from '../service/Instance';
-const apiUrl = process.env.REACT_APP_API_BASE_URL;
+import Cookies from "js-cookie";
+
 function Signup() {
 
 
@@ -58,7 +59,7 @@ function Signup() {
 
     const [loader, setLoader] = useState(false)
 
-   
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -67,19 +68,20 @@ function Signup() {
             setLoader(true)
             try {
                 const response = await instance.post(`signup`, formSign);
-                // console.log(response.data.errors.email, "response");
+                console.log(response.data.data.stepper, "response");
                 setLoader(false)
                 if (response.data.errors?.email) {
                     toast.error("The email has already been taken");
                 }
                 if (response.data.errors?.password) {
-                    toast.error("The password field must be at least 8 characters"); 
-                
+                    toast.error("The password field must be at least 8 characters");
+
 
                 }
                 if (response.data.access_token) {
-                    localStorage.setItem("access_token", response.data.access_token);
-                    localStorage.setItem("refresh_token", response.data.refresh_token);
+                    Cookies.set("access_token", response.data.access_token);
+                    Cookies.set("refresh_token", response.data.refresh_token);
+                    Cookies.set("Stepper", response.data.user.stepper);
                     toast.success("User Signup Successfully")
                     setFormSign({
                         name: "",
@@ -90,11 +92,11 @@ function Signup() {
                         checked: false
                     })
                     setLoader(true)
-                        navigate("/intake")
-                 
+                    // navigate("/intake")
+
                 }
             } catch (error) {
-              
+
             }
         }
     };
@@ -189,8 +191,8 @@ function Signup() {
                                     </span>
                                 </div>
                                 <div className='text-center pt-4'>
-                                <p>Already have Account? <Link className='text-blue-500' to={"/signin"}>Sign in</Link></p>
-                            </div>
+                                    <p>Already have Account? <Link className='text-blue-500' to={"/signin"}>Sign in</Link></p>
+                                </div>
                             </div>
                         </div>
                         <div className='hidden sm:hidden md:block'>

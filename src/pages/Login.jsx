@@ -1,4 +1,4 @@
-import axios from 'axios'
+import Cookies from "js-cookie";
 import React, { useState } from 'react'
 import { FaApple } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
@@ -8,7 +8,8 @@ import Loader from '../common/Loader'
 import Input from '../common/Input'
 import Container from '../common/Container'
 import instance from '../service/Instance'
-
+ 
+ const stepper =  Cookies.get("Stepper")
 function Login() {
     const navigate = useNavigate()
     const [userLog, setUserLog] = useState({
@@ -47,10 +48,12 @@ function Login() {
             setLoader(true)
             try {
                 const response = await instance.post(`login`, userLog);
-                console.log(response,"log")
+                console.log(response.data.user,"log")
                 if (response.data.access_token) {
-                    localStorage.setItem("access_token", response.data.access_token);
-                    localStorage.setItem("refresh_token", response.data.refresh_token);
+                    Cookies.set("access_token", response.data.access_token);
+                    Cookies.set("refresh_token", response.data.refresh_token);
+                    Cookies.set("Stepper", response.data.user.stepper);
+
                     toast.success(response.data.message);
                 
                     setUserLog({
@@ -60,9 +63,13 @@ function Login() {
                     });
                 
                     setLoader(false);
+
+                    if(stepper === "Profile" ){
+                        navigate("/intake")
+                    }
                 
                     
-                    if (response?.data?.user?.plan) {
+                    if (response?.data?.user?.stepper ==="Active") {
                         navigate("/dashboard/home");
                     } else if (response?.data?.user?.stepper === "Subscription") {
                         navigate("/dashboard/subscription");

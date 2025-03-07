@@ -12,8 +12,20 @@ import CreateJobView from "../Components/ViewUserCreateJob/CreateJobView";
 import Settings from "../pages/dashboard/Settings";
 import Topbar from "../Components/Topbar";
 import CompanyForm from "../Components/CompanyProfileForm";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getProfile } from "../feature/ProfileSlice";
 
 const MyRoutes = () => {
+ const dipatch = useDispatch()
+ useEffect(()=>{
+    dipatch(getProfile())
+  },[])
+ 
+  const profile = useSelector((state) => state)
+
+  
+
   const routes = useRoutes([
     // Public Routes
     { element: <Home />, path: "/" },

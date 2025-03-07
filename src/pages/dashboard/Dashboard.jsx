@@ -1,38 +1,27 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import Container from "../../common/Container";
-import Topbar from "../../Components/Topbar"; 
 import { IoOptionsOutline } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "../../feature/ProfileSlice";
 
-const navItems = [
-  { name: "Dashboard", path: "/dashboard" },
-  { name: "AllJobs", path: "/alljobs" },
-  { name: "Find Candidates", path: "/find-candidates" },
-  { name: "Account Users", path: "/account-users" },
-  { name: "Messages", path: "/messages" },
-];
+
 const Dashboard = () => {
   
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate()
-  const[settingOpen,setSettingOpen] = useState(false)
+  
+const dipatch = useDispatch()
 
+useEffect(()=>{
+  dipatch(getProfile())
+},[dipatch])
 
-  const handleLogOut = (e) => {
-    const selectOption = e.target.value
-    if (selectOption === "logOut") {
-      localStorage.clear()
-      navigate("/signin")
-    }
-
-  }
-
+const profile = useSelector((state)=>state?.profile?.profileData?.stepper)
+   
   return (
+    <>
+    
     <Container>
-      {/* Header Section */}
- 
-
-      {/* Main Content */}
+      
      <div className="bg-[#F4F9FF] ">
         {/* Top Filters */}
         <div className="flex flex-col md:flex-row justify-between items-center   p-4  rounded-xl">
@@ -49,7 +38,8 @@ const Dashboard = () => {
               placeholder="Search Candidate"
             />
             <button className="px-4 py-2 md:py-3 rounded-xl bg-blue-500 text-white shadow-md hover:bg-blue-600 transition duration-300">
-              <Link to="/postajob">Post New Job</Link>
+            <Link to={profile === "Profile" ? "/intake" : "/postajob"}>Post New Job</Link>
+
             </button>
           </div>
         </div>
@@ -69,6 +59,7 @@ const Dashboard = () => {
       </div>
     
     </Container>
+    </>
   );
 };
 
